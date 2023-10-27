@@ -1,25 +1,29 @@
 import React from 'react'
 import { useState } from 'react'
 
-async function RegisterForm(event){
-event.preventDefault()
-await fetch('http://localhost:5000/register',{
-  method:'POST', 
-  body:JSON.stringify({username,password}),
-  headers:{'Content-Type':'application/json'}
-})
-
-
-}
 
 const Register = () => {
   const[username,setusername]=useState('')
   const[password,setpassword]=useState('')
 
+  
+async function RegisterForm(event){
+  event.preventDefault()
+  try{
+  await fetch('http://localhost:5000/register',{
+    method:'POST', 
+    body:JSON.stringify({username,password}),
+    headers:{'Content-Type':'application/json'}
+  })}
+  catch(e){
+    alert("registeration failed")
+  }
+  }
+
   return (
     <div>
        <div className='mx-[auto] h-[50vh] p-3 w-[95%] sm:w-[60%] md:w-[40%]  '>
-      <form className='flex flex-col justify-evenly my-2 mt-6' onSubmit={RegisterForm}
+      <form className='flex flex-col justify-evenly my-2 mt-6' onSubmit={(event)=>RegisterForm(event)}
       >
         <h1 className='font-bold text-[2rem]'>Register</h1>
         <input type='text' 
