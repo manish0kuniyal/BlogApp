@@ -54,4 +54,16 @@ app.post('/login',async(req,res)=>{
 })
 
 
+app.get('/profile',(req,res)=>{
+
+
+
+
+    
+})
+
+
+
+
+
 app.listen(5000,console.log("...on port 5000"))
