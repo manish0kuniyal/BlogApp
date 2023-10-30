@@ -4,13 +4,15 @@ const mongoose=require('mongoose')
 const dotenv=require('dotenv')
 const bcrypt=require('bcrypt')
 const User=require('./mongo/user')
+const jwt=require('jsonwebtoken')
 
 const app=express()
 const salt = bcrypt.genSaltSync(10);
+const secret="k23n434jn"
 
 dotenv.config()
 app.use(express.json())
-app.use(cors())
+app.use(cors({credentials:true,origin:'http://localhost:3000'}))
 
 mongoose.connect(process.env.URL,{
  useNewUrlparser:true
@@ -38,7 +40,17 @@ app.post('/login',async(req,res)=>{
     const userDoc=await User.findOne({username})
     const chckPswrd=bcrypt.compareSync(password,userDoc.password)
     // res.json(chckPswrd)
-    console.log(chckPswrd)
+    console.log(chckPswrd )
+    if(chckPswrd){
+        jwt.sign({username,id:userDoc._id},secret,{},(err,token)=>{
+            if(err)
+              throw err
+               res.cookie('token',token).json('ok')
+        })
+    }
+    else{
+        res.status(400).json('wrong credentials')
+    }
 })
 
 

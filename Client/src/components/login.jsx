@@ -1,17 +1,28 @@
 import React, { useState } from 'react'
-
+import {Navigate} from 'react-router-dom'
 const Login = () => {
 const [username ,setusername]=useState('')
 const [password ,setpassword]=useState('')
+const [redirect,setredirect]=useState(false)
 
 async function Login(event){
   event.preventDefault()
   await fetch('http://localhost:5000/login',{
     method:"POST",
     body:JSON.stringify({username , password}),
-    headers:{'Content-Type':'application/json'}
+    headers:{'Content-Type':'application/json'},
+    credentials:'include'
   })
+  if(response.ok){
+    setredirect(true)
+  }
+  else{
+    alert('User Not Found')
+  }
+  }
 
+  if(redirect){
+    return <Navigate  to={'/'}/>
   }
 
 
