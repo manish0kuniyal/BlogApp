@@ -7,7 +7,7 @@ const [redirect,setredirect]=useState(false)
 
 async function Login(event){
   event.preventDefault()
-  await fetch('http://localhost:5000/login',{
+  const response=await fetch('http://localhost:5000/login',{
     method:"POST",
     body:JSON.stringify({username , password}),
     headers:{'Content-Type':'application/json'},

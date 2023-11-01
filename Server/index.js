@@ -5,14 +5,17 @@ const dotenv=require('dotenv')
 const bcrypt=require('bcrypt')
 const User=require('./mongo/user')
 const jwt=require('jsonwebtoken')
-
+const cookieParser=require('cookie-parser')
 const app=express()
 const salt = bcrypt.genSaltSync(10);
 const secret="k23n434jn"
 
+
 dotenv.config()
 app.use(express.json())
+app.use(cookieParser())
 app.use(cors({credentials:true,origin:'http://localhost:3000'}))
+
 
 mongoose.connect(process.env.URL,{
  useNewUrlparser:true
@@ -29,9 +32,9 @@ app.post('/register',async(req,res)=>{
     })
 
     res.json(userDoc)}
-    catch(err){
+    catch(err){ 
         console.log(err)
-        res.status(400).json(e)//used to send response to client
+        res.status(400).json(err)//used to send response to client
     }
 })
 
@@ -55,11 +58,17 @@ app.post('/login',async(req,res)=>{
 
 
 app.get('/profile',(req,res)=>{
+    const {token}=req.cookies
+    jwt.verify(token,secret,{},(err,info)=>{
+        if(err)
+        throw err
+    res.json(info)
+    })
+    // res.json(req.cookies)
+})
 
-
-
-
-    
+app.post('/logout',(req,res)=>{
+    res.cookie('token','').json('ok')
 })
 
 
