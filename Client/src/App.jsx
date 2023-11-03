@@ -3,8 +3,12 @@ import Login from './components/login'
 import Register from './components/register'
 import {Routes,Route,BrowserRouter as Router} from 'react-router-dom'
 import Layout from './components/layout'
+import {UserContextProvider} from './usercontext'
+
 const App = () => {
-  return (<>
+  return (
+      
+  <UserContextProvider>
       <div className='App'>
       
       <Routes>
@@ -13,9 +17,9 @@ const App = () => {
            <Route path='/register' element={<Register/>} />
            </Route> 
          </Routes>
+      </div>
+      </UserContextProvider>
     
-    </div>
-    </>
 
   )
 }

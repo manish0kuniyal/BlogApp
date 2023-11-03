@@ -14,7 +14,7 @@ const secret="k23n434jn"
 dotenv.config()
 app.use(express.json())
 app.use(cookieParser())
-app.use(cors({credentials:true,origin:'http://localhost:3000'}))
+app.use(cors({credentials:true,origin:'http://localhost:3001'}))
 
 
 mongoose.connect(process.env.URL,{
@@ -48,7 +48,10 @@ app.post('/login',async(req,res)=>{
         jwt.sign({username,id:userDoc._id},secret,{},(err,token)=>{
             if(err)
               throw err
-               res.cookie('token',token).json('ok')
+               res.cookie('token',token).json({
+                id:userDoc._id,
+                username
+               })
         })
     }
     else{

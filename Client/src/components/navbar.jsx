@@ -1,13 +1,16 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { UserContext } from '../usercontext'
 const Navbar = () => {
-   const [username,setusername]=useState(null)
+
+   const {setUserInfo,userInfo}=useContext(UserContext)
+   
   useEffect(()=>{
     fetch('http://localhost:5000/profile',{
       credentials:'include', 
     }).then(res=>{
       res.json().then(userInfo=>{
-        setusername(userInfo.username)
+        setUserInfo(userInfo)
       })
     })
   },[])
@@ -17,9 +20,9 @@ const Navbar = () => {
       credentials:'include',
       method:'POST',
     })
-    setusername(null)
+    setUserInfo(null)
   }
-
+ const username=userInfo?.username
   return (
 <div>
     <div className='flex justify-between items-center  mt-4  mb-[10%] lg:mb-[5%]'>
@@ -29,7 +32,7 @@ const Navbar = () => {
          {username &&(
           <>
           <Link to='/create'>Create a Post</Link>
-          <a onClick={logout} >Logout</a>
+          <a className='cursor-pointer' onClick={logout} >Logout</a>
           </>
          )}
          {!username &&(
