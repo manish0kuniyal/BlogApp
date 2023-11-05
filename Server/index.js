@@ -6,6 +6,9 @@ const bcrypt=require('bcrypt')
 const User=require('./mongo/user')
 const jwt=require('jsonwebtoken')
 const cookieParser=require('cookie-parser')
+const multer=require('multer')
+const uploadMiddleware=multer({dest:'uploads/'})
+
 const app=express()
 const salt = bcrypt.genSaltSync(10);
 const secret="k23n434jn"
@@ -14,7 +17,7 @@ const secret="k23n434jn"
 dotenv.config()
 app.use(express.json())
 app.use(cookieParser())
-app.use(cors({credentials:true,origin:'http://localhost:3001'}))
+app.use(cors({credentials:true,origin:'http://localhost:3000'}))
 
 
 mongoose.connect(process.env.URL,{
@@ -75,7 +78,9 @@ app.post('/logout',(req,res)=>{
 })
 
 
-
+app.post('/post', uploadMiddleware.single('file'),(req,res)=>{
+    res.json({files:req.file})
+})
 
 
 app.listen(5000,console.log("...on port 5000"))

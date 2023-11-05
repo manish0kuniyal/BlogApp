@@ -4,6 +4,7 @@ import Register from './components/register'
 import {Routes,Route,BrowserRouter as Router} from 'react-router-dom'
 import Layout from './components/layout'
 import {UserContextProvider} from './usercontext'
+import Post from './components/post'
 
 const App = () => {
   return (
@@ -15,6 +16,7 @@ const App = () => {
            <Route path='/' element={<Layout/>}>  
            <Route path='/login' element={<Login/>} />
            <Route path='/register' element={<Register/>} />
+           <Route path='/create' element={<Post/>}/>
            </Route> 
          </Routes>
       </div>
