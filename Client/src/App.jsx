@@ -5,7 +5,7 @@ import {Routes,Route,BrowserRouter as Router} from 'react-router-dom'
 import Layout from './components/layout'
 import {UserContextProvider} from './usercontext'
 import Post from './components/post'
-
+import Home from './components/home'
 const App = () => {
   return (
       
@@ -14,6 +14,7 @@ const App = () => {
       
       <Routes>
            <Route path='/' element={<Layout/>}>  
+           <Route index element={<Home/>}/>
            <Route path='/login' element={<Login/>} />
            <Route path='/register' element={<Register/>} />
            <Route path='/create' element={<Post/>}/>
@@ -21,7 +22,6 @@ const App = () => {
          </Routes>
       </div>
       </UserContextProvider>
-    
 
   )
 }

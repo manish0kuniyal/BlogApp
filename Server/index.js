@@ -8,7 +8,8 @@ const jwt=require('jsonwebtoken')
 const cookieParser=require('cookie-parser')
 const multer=require('multer')
 const uploadMiddleware=multer({dest:'uploads/'})
-
+const post=require('./mongo/post')
+const fs=require('fs')
 const app=express()
 const salt = bcrypt.genSaltSync(10);
 const secret="k23n434jn"
@@ -78,9 +79,39 @@ app.post('/logout',(req,res)=>{
 })
 
 
-app.post('/post', uploadMiddleware.single('file'),(req,res)=>{
-    res.json({files:req.file})
+app.post('/post', uploadMiddleware.single('file'),async(req,res)=>{
+    let newPath = null;
+    if (req.file) {
+      const {originalname,path} = req.file;
+      const parts = originalname.split('.');
+      const ext = parts[parts.length - 1];
+      newPath = path+'.'+ext;
+      fs.renameSync(path, newPath);
+    }
+  
+    const {token} = req.cookies;
+    jwt.verify(token, secret, {}, async (err,info) => {
+      if (err) throw err;
+      const {id,title,summary,content} = req.body;
+      const postDoc = await Post.findById(id);
+      const isAuthor = JSON.stringify(postDoc.author) === JSON.stringify(info.id);
+      if (!isAuthor) {
+        return res.status(400).json('you are not the author');
+      }
+      await postDoc.update({
+        title,
+        summary,
+        content,
+        cover: newPath ? newPath : postDoc.cover,
+      });
+  
+      res.json(postDoc);
+    });
 })
 
+app.get('/post',async(req,res)=>{
+    const posts=await post.find()
+    res.json(posts)
+})
 
 app.listen(5000,console.log("...on port 5000"))
